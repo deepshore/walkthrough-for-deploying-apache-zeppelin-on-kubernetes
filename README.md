@@ -155,7 +155,7 @@ data:
   ZEPPELIN_K8S_CONTAINER_IMAGE: grothesk/zeppelin-interpreter-custom:0.10.0-SNAPSHOT
 ```
 
-The ConfigMap is used to inject the included values as environment variables into the server container. 
+The ConfigMap `zeppelin-server-conf-map` is used to inject the included values as environment variables into the server container. 
 Consequently, a restart of the server pods is necessary if the value of `ZEPPELIN_K8S_CONTAINER_IMAGE` has been changed.
 
 Ok, let's get to the end: after configuring `k8s/zeppelin-server.yaml` you can deploy Apache Zeppelin like this:
@@ -219,7 +219,8 @@ When port forwarding is set up, we should be able to communicate with Zeppelin v
 
 ![Welcome to Zeppelin](images/welcome-interpreter.png)
 
-The following pictures show the configuration of the Cassandra interpreter:
+The following pictures show the configuration of the Cassandra interpreter. 
+According to our Cassandra Deloyment, the configuration only involves the `hosts` ("cassandra") and `cluster` ("K8sDemo") properties.
 
 ![Configure hosts and cluster](images/cassandra-config.png)
 
@@ -237,9 +238,9 @@ In order to test different interpreters, we should add and run some paragraphs:
 
 ![Create paragraphs](images/paragraphs-create.png)
 
-![Create paragraphs](images/paragraphs-create.png)
+![Run paragraphs](images/paragraphs-run.png)
 
-Finally, if we have a look at the pods, we see that for each interpreter used, a corresponding pod has been created:
+Finally, if we have a look at the pods, we can see that for each interpreter used, a corresponding pod has been created:
 
 ```bash
 kubectl get pods
@@ -250,6 +251,8 @@ md-gangug                          1/1     Running   0          80s
 python-ocxhqu                      1/1     Running   0          76s
 zeppelin-server-54c44df9bc-m7rsk   3/3     Running   0          18m
 ```
+
+I am convinced that you can manage on your own from here on. :-)
 
 ## Sources
 
