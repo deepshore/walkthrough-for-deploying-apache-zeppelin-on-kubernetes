@@ -57,9 +57,9 @@ spec:
           - name: CASSANDRA_CLUSTER_NAME
             value: "K8sDemo"
           - name: CASSANDRA_DC
-            value: "DC1-K8Demo"
+            value: "DC1-K8sDemo"
           - name: CASSANDRA_RACK
-            value: "Rack1-K8Demo"
+            value: "Rack1-K8sDemo"
           - name: POD_IP
             valueFrom:
               fieldRef:
