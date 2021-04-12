@@ -2,8 +2,8 @@
 
 Apache Zeppelin is a *web-based notebook that enables data-driven,
 interactive data analytics and collaborative documents with SQL, Scala and more.*
-As a Data Scientist, I love Apache Zeppelin because of its versatility and flexibility - from a Kubernetes administrator's perspective, Zeppelin has given me some headaches
 
+As a Data Scientist, I love Apache Zeppelin because of its versatility and flexibility - from a Kubernetes administrator's perspective, Zeppelin has given me some headaches
 However, in my opinion, this is not because Zeppelin's Kubernetes support is bad. 
 Rather, I am not convinced by the current official documentation and the available sources on this subject, which brings us to the motivation for this article.
 
@@ -11,9 +11,9 @@ Rather, I am not convinced by the current official documentation and the availab
 
 ## Apache Zeppelin on Kubernetes
 
-So, how does Zeppelin work on Kubernetes? Basically, the whole thing is based on a simple principle:
+So, how does Zeppelin work on Kubernetes? Basically, the whole thing is based on simple principles:
 there is a web server brought in as a Kubernetes deployment. While you are interacting with a Zeppelin note, the server creates pods for each of the interpreters in a lazy fashion. 
-Consider the following: the different interpreter pods are using the same image.
+The interpreter pods all use the same image.
 
 ## Building and providing Images
 
@@ -21,7 +21,7 @@ That said, when it comes to building and providing the required images, the foll
 The creation of these images is typically done by multistage builds.
 In this context, a common base image is utilized for both images, from which the relevant parts of Apache Zeppelin are taken. Accordingly, the first step of building the desired images is to provide said base image.
 
-### Base Image 
+### Building the Base Image 
 
 One option for providing the base image is to use the code from the official repository, which can be obtained by using git:
 
@@ -35,14 +35,14 @@ The base image contains the complete build of Zeppelin and is about 2GB in size.
 Therefore, the creation of the image will take some time. 
 Furthermore, you have to make sure that Docker has enough resources available. If you are a Windows or Mac user, you may have to resize the virtual machine Docker is using.
 
-This in mind, we can change to the root directory of the project and start the build. Thereby it makes sense to use the tag that is referred in the Dockerfiles for the said images inheriting from the base image:
+This in mind, we can change to the root directory of the project and start the build. Thereby it makes sense to use the tag that is referred in the Dockerfiles of the said images inheriting from the base image:
 
 ```bash
 cd zeppelin
 docker build -t zeppelin-distribution:latest . 
 ```
 
-### Server Image
+### Building the Server Image
 
 Apache Zeppelin's Github project provides some useful Dockerfiles. A Dockerfile for building the server image is located in the `scripts/docker/zeppelin-server` folder of the project.
 Before the image can be built, a few adaptions may need to be made.
@@ -62,9 +62,9 @@ ARG version="0.10.0-SNAPSHOT"
 
 Another option is to add the version number as an argument to the docker build command (see below).
 
-If you take a closer look at the Dockerfile, there are hints for the configuration of the image in the comments. 
+If you take a closer look at the Dockerfile, there are hints in the comments for how to configure the image. 
 For example, you can determine that only certain interpreters are supported by the zeppelin server. 
-According to the following example snippet, only the support for JDBC, Markdown, Python and Cassandra will be integrated in the image:
+According to the following example snippet, only support for JDBC, Markdown, Python and Cassandra will be integrated in the image:
 
 ```dockerfile
 # Decide
@@ -77,8 +77,8 @@ COPY --from=zeppelin-distribution /opt/zeppelin/interpreter/python/interpreter-s
 COPY --from=zeppelin-distribution /opt/zeppelin/interpreter/cassandra/interpreter-setting.json ${ZEPPELIN_HOME}/interpreter/cassandra/interpreter-setting.json
 ```
 
-Because of the local `log4j.properties` file, the build of the image has to be run from the corresponding folder.
-Apart from that, you should tag the image with the reference to the associated registry Kubernetes will access later on:
+Since local files are involved, the build of the image has to be run from the corresponding folder.
+Apart from that, you should tag the image to refer to the associated registry Kubernetes will access later on:
 
 ```bash
 cd scripts/docker/zeppelin-server
@@ -91,13 +91,13 @@ Pushing the image to the registry then is done like this:
 docker push grothesk/zeppelin-server-custom:0.10.0-SNAPSHOT
 ```
 
-### Interpreter Image
+### Building the Interpreter Image
 
 A corresponding Dockerfile for the interpreter image can be found in the `scripts/docker/zeppelin-interpreter` folder.
 The procedure is very similar to the one dealing with the server image considered before:
-the version number has to be set and the interpreters have to be selected according to the configuration of the server.
+the version has to be set and you have to choose which interpreters should be supported.
 
-For an example configuration with support for JDBC, Markdown, Python and Cassandra the interpreter's Dockerfile should contain the following lines:
+For example, if you want to provide support for JDBC, Markdown, Python and Cassandra the interpreter's Dockerfile should contain the following lines:
 
 ```dockerfile
 # Decide:
@@ -113,8 +113,7 @@ COPY --from=zeppelin-distribution /opt/zeppelin/interpreter/python  ${ZEPPELIN_H
 COPY --from=zeppelin-distribution /opt/zeppelin/interpreter/cassandra  ${ZEPPELIN_HOME}/interpreter/cassandra
 ```
 
-If certain Python packages are required for the interpreter, these can be specified via `conda_packages.txt` or `pip_packages.txt`.
-These files are located in the same folder as the Dockerfile.
+If certain Python packages are required for the interpreter, these can be specified via `conda_packages.txt` or `pip_packages.txt`, located in the same folder as the Dockerfile.
 
 After configuring the Dockerfile, building and deploying the image is done as usual:
 
@@ -126,10 +125,10 @@ docker push grothesk/zeppelin-interpreter-custom:0.10.0-SNAPSHOT
 
 ## Deploying the Kubernetes resources
 
-For the Kubernetes deployment of Zeppelin, there is a yaml file in the project that contains the relevant manifests: `k8s/zeppelin-server.yaml`.
+For the deployment of Zeppelin there is a yaml file in the project that contains the relevant manifests: `k8s/zeppelin-server.yaml`.
 The customized images are referenced within the manifests as follows.
 
-The name of the server image is inserted into the corresponding field of the deployment:
+The name of the server image is inserted into the corresponding field of the deployment controller:
 
 ```yaml
 apiVersion: apps/v1
@@ -148,7 +147,7 @@ spec:
         image: grothesk/zeppelin-server-custom:0.10.0-SNAPSHOT
 ```
 
-The interpreter image is defined in the ConfigMap `zeppelin-server-conf-map`:
+The interpreter image is set in the ConfigMap `zeppelin-server-conf-map`:
 
 ```yaml
 apiVersion: v1
@@ -172,12 +171,12 @@ And that's it.
 
 ## Deploying Apache Zeppelin on Minikube
 
-Last but not least, here is a test run of the deployment using a minikube cluster.
+Last but not least, here is a test run of the deployment using a Minikube cluster.
 In this example, the required images are provided by my account on DockerHub. 
 
 You can obtain the corresponding Dockerfiles and manifests here: [https://github.com/deepshore/walkthrough-for-deploying-apache-zeppelin-on-kubernetes](https://github.com/deepshore/walkthrough-for-deploying-apache-zeppelin-on-kubernetes).
 
-All of these files were created according to the principles above.
+These files were created according to the steps above.
 
 First, we need a cluster that meets the performance requirements. 
 The requirements depend strongly on the tasks that are to be performed by the interpreters.
@@ -188,7 +187,7 @@ minikube start -p zeppelin --driver=virtualbox --memory=6g --cpus=4 --disk-size=
 ```
 
 To be able to test the Apache Cassandra support of the interpreter image, you should deploy Cassandra. 
-Manifests for deploying Cassandra on Kubernetes can be taken from the repo like this:
+Manifests for deploying Cassandra on Kubernetes can be taken from the said repo like this:
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/deepshore/walkthrough-for-deploying-apache-zeppelin-on-kubernetes/main/cassandra/cassandra-service.yaml
@@ -226,8 +225,8 @@ When port forwarding is set up, we should be able to communicate with Zeppelin v
 
 ![Welcome to Zeppelin](images/welcome-interpreter.png)
 
-The following pictures show the configuration of the Cassandra interpreter. 
-According to our Cassandra Deloyment, the configuration only involves the `hosts` (*cassandra*) and `cluster` (*K8sDemo*) properties.
+The following pictures show the steps for configuring the Cassandra interpreter.
+According to our Cassandra deployment, changes to the configuration only affects the `hosts` (*cassandra*) and `cluster` (*K8sDemo*) properties.
 
 ![Configure hosts and cluster](images/cassandra-config.png)
 
