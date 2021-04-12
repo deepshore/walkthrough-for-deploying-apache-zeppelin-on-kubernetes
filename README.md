@@ -54,7 +54,7 @@ The version number of the distribution can be obtained by considering the war fi
 docker run -i zeppelin-distribution:latest ls /opt/zeppelin
 ```
 
-You can set the version number for the server image by changing the default value of the `value` argument in the Dockerfile, e.g. like this:
+You can set the version number for the server image by changing the default value of the `version` argument in the Dockerfile, e.g. like this:
 
 ```dockerfile
 ARG version="0.10.0-SNAPSHOT"
