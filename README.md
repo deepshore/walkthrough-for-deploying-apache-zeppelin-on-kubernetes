@@ -125,8 +125,8 @@ docker push grothesk/zeppelin-interpreter-custom:0.10.0-SNAPSHOT
 
 ## Deploying the Kubernetes resources
 
-For the deployment of Zeppelin there is a yaml file in the project that contains the relevant manifests: `k8s/zeppelin-server.yaml`.
-The customized images are referenced within the manifests as follows.
+For the deployment of Zeppelin there is a yaml file in the project that contains the relevant manifests of the resources: `k8s/zeppelin-server.yaml`.
+The customized images have to be referred within the manifests as follows.
 
 The name of the server image is inserted into the corresponding field of the deployment controller:
 
@@ -159,7 +159,7 @@ data:
   ZEPPELIN_K8S_CONTAINER_IMAGE: grothesk/zeppelin-interpreter-custom:0.10.0-SNAPSHOT
 ```
 
-The ConfigMap `zeppelin-server-conf-map` is used to inject the included values as environment variables into the server container. 
+`zeppelin-server-conf-map` is used to inject the included values as environment variables into the server container. 
 Consequently, a restart of the server pods is necessary if the value of `ZEPPELIN_K8S_CONTAINER_IMAGE` has been changed.
 
 Ok, let's get to the end: after configuring `k8s/zeppelin-server.yaml` you can deploy Apache Zeppelin like this:
@@ -262,13 +262,13 @@ I am convinced that you can manage on your own from here on.
 
 ## Additions
 
-I have created a base image using the commit `e0e2ca5f8087d8f47a9fba4bfe736b53a565cb11`, which you can pull from DockerHub like this:
+I have created a base image which you can pull from DockerHub like this:
 
 ```bash
 docker pull grothesk/zeppelin-distribution:e0e2ca5f8087d8f47a9fba4bfe736b53a565cb11
 ```
 
-Feel free to use it.
+It's based on commit `e0e2ca5f8087d8f47a9fba4bfe736b53a565cb11`. Feel free to use it.
 
 ## Sources
 
