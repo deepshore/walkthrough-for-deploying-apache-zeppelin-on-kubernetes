@@ -260,6 +260,16 @@ zeppelin-server-54c44df9bc-m7rsk   3/3     Running   0          18m
 
 I am convinced that you can manage on your own from here on.
 
+## Additions
+
+I have created a base image using the commit `e0e2ca5f8087d8f47a9fba4bfe736b53a565cb11`, which you can pull from DockerHub like this:
+
+```bash
+docker pull grothesk/zeppelin-distribution:e0e2ca5f8087d8f47a9fba4bfe736b53a565cb11
+```
+
+Feel free to use it.
+
 ## Sources
 
 * Docker Multistage-Builds: [https://docs.docker.com/develop/develop-images/multistage-build/](https://docs.docker.com/develop/develop-images/multistage-build/)
