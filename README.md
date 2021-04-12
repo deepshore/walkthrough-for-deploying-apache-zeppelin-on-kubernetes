@@ -3,7 +3,7 @@
 Apache Zeppelin is a *web-based notebook that enables data-driven,
 interactive data analytics and collaborative documents with SQL, Scala and more.*
 
-As a Data Scientist, I love Apache Zeppelin because of its versatility and flexibility - from a Kubernetes administrator's perspective, Zeppelin has given me some headaches
+As a Data Scientist, I love Apache Zeppelin because of its versatility and flexibility - from a Kubernetes administrator's perspective, Zeppelin has given me some headaches.
 However, in my opinion, this is not because Zeppelin's Kubernetes support is bad. 
 Rather, I am not convinced by the current official documentation and the available sources on this subject, which brings us to the motivation for this article.
 
