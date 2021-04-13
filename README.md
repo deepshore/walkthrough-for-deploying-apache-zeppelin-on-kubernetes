@@ -19,23 +19,23 @@ The interpreter pods all use the same image.
 
 That said, when it comes to building and providing the required images, the following implies: there is need for both an image containing the web server and another image used by the interpreter pods.
 The creation of these images is typically done by multistage builds.
-In this context, a common base image is utilized for both images, from which the relevant parts of Apache Zeppelin are taken. Accordingly, the first step of building the desired images is to provide said base image.
+In this context, a common distribution image is utilized for both images, from which the relevant parts of Apache Zeppelin are taken. Accordingly, the first step of building the desired images is to provide said distribution image.
 
-### Building the Base Image 
+### Building the Distribution Image 
 
-One option for providing the base image is to use the code from the official repository, which can be obtained by using git:
+One option for providing the distribution image is to use the code from the official repository, which can be obtained by using git:
 
 ```bash
 git clone https://github.com/apache/zeppelin.git
 ```
 
-The Dockerfile suitable for building the base image is located directly in the root directory of the project. So, looks like you can get started right away, but before starting the build, you should consider the following aspects:
+The Dockerfile suitable for building the distribution image is located directly in the root directory of the project. So, looks like you can get started right away, but before starting the build, you should consider the following aspects:
 
-The base image contains the complete build of Zeppelin and is about 2GB in size. 
+The distribution image contains the complete build of Zeppelin and is about 2GB in size. 
 Therefore, the creation of the image will take some time. 
 Furthermore, you have to make sure that Docker has enough resources available. If you are a Windows or Mac user, you may have to resize the virtual machine Docker is using.
 
-This in mind, we can change to the root directory of the project and start the build. Thereby it makes sense to use the tag that is referred in the Dockerfiles of the said images inheriting from the base image:
+This in mind, we can change to the root directory of the project and start the build. Thereby it makes sense to use the tag that is referred in the Dockerfiles of the said images inheriting from the distribution image:
 
 ```bash
 cd zeppelin
@@ -48,7 +48,7 @@ Apache Zeppelin's Github project provides some useful Dockerfiles. A Dockerfile 
 Before the image can be built, a few adaptions may need to be made.
 
 First thing to do is to set the version number of the distribution.
-The version number of the distribution can be obtained by considering the war files in the base image:
+The version number of the distribution can be obtained by considering the war files in the distribution image:
 
 ```bash
 docker run -i zeppelin-distribution:latest ls /opt/zeppelin
@@ -262,7 +262,7 @@ I am convinced that you can manage on your own from here on.
 
 ## Additions
 
-I have created a base image which you can pull from DockerHub like this:
+I have created a distribution image which you can pull from DockerHub:
 
 ```bash
 docker pull grothesk/zeppelin-distribution:e0e2ca5f8087d8f47a9fba4bfe736b53a565cb11
