@@ -13,7 +13,7 @@ Rather, I am not convinced by the current official documentation and the availab
 
 So, how does Zeppelin work on Kubernetes? Basically, the whole thing is based on simple principles:
 there is a web server brought in as a Kubernetes deployment. While you are interacting with a Zeppelin note, the server creates pods for each of the interpreters in a lazy fashion. 
-The interpreter pods all use the same image.
+The interpreter pods all use the same container image.
 
 ## Building and providing Images
 
